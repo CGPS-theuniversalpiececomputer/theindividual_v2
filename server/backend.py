@@ -112,7 +112,7 @@ class Backend_Api:
             callback_fn = StreamingStdOutCallbackHandlerYield()
 
             chat_gpt_callback = ChatOpenAI(
-                temperature=1.2,
+                temperature=1,
                 model_name="gpt-4o",
                 streaming=True,
                 callbacks=[callback_fn],
