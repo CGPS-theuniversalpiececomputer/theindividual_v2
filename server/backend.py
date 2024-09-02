@@ -96,11 +96,6 @@ class Backend_Api:
                     token = rq.get()
                     streamed_response = streamed_response + token
                     if token == "XXX":
-                        if prompt == "wild":
-                            print("picle")
-                            memory.save_context({"input": "wild"}, {"output": streamed_response})
-                        elif prompt == "rephrase":
-                            memory.save_context({"input": "rephrase"}, {"output": streamed_response})
                         conversations.update({conversation_id: memory})
                         break
                     yield token
@@ -125,7 +120,7 @@ class Backend_Api:
             )
 
             dummy_memory = ConversationBufferWindowMemory(
-                k=4,
+                k=1,
                 ai_prefix="The Individual",
             )
 
@@ -138,6 +133,7 @@ class Backend_Api:
 
             match prompt:
 
+                # hints and null input
                 case "":
                     return self.app.response_class("You must provide a prompt. Try again.")
 
@@ -148,12 +144,13 @@ class Backend_Api:
                     return self.app.response_class(text.HELP)
 
                 case "topics":
-                    return self.app.response_class(text.MENU)
+                    return self.app.response_class(text.SUGGESTION)
 
                 case "menu":
-                    return self.app.response_class(text.WELCOME)
+                    return self.app.response_class(text.MENU)
 
                 case _:
+                    
                     # get context to inject into template
                     context_injection, feedback_injection = utilities.combined_injections(
                         contextdb,
@@ -166,8 +163,6 @@ class Backend_Api:
                         input_variables=["history", "input"],
                         template=template
                     )
-
-                    print(PROMPT)
 
                     def build_and_submit():
 
@@ -183,9 +178,6 @@ class Backend_Api:
 
                     threading.Thread(target=build_and_submit).start()
 
-            print(utilities.num_tokens(memory.load_memory_variables({})["history"] + PROMPT.template))
-            print()
-            print()
             return self.app.response_class(stream_with_context(stream(q, prompt)), mimetype="text/event-stream")
 
         except Exception as e:

@@ -19,9 +19,6 @@
 #          
 # BEGINS #################################################################################
 
-import re
-
-
 # NOTES ON TEMPLATES:
 #
 # . this approach is 'hackey'. what I mean by this is that is abandons the langchain
@@ -41,11 +38,7 @@ import re
 # . I don't understand the {} syntax ... for feedback, I am hacking around the {} by
 #   falling back to formatting with %s
 # . everything else about this template is standard pattern for langchain yadda
-#
-# ! in the future, this template should contain a condensed version of the universal piece
-#  (until then, the interlocutor is rather aimless and repetitive)
-# ! obviously, if you wish to repurpose this for your own corpus, you will need to customize the intro
-#  (after the CONTEXT section)
+
 class template:
 
     MAIN = """
@@ -113,7 +106,7 @@ Silently make the following spelling corrections.
 'the universal peace' is wrong 'the universal piece' is correct.
 'world peace' describes the ideal form of global peace.
 'world piece' is otherwise correct.
-Terms in uppercase must convert into lowercase.
+Convert all uppercase terms into lowercase.
 ====
 Feedback: Do not say that something is irrelevant to our purpose. Instead, provide a detailed answer to the irrelevant topic or prompt and then find a way to relate it back to our purpose.
 ====
@@ -132,7 +125,6 @@ Feedback: Always make specific references to the lingua franca when providing ex
 
 Do not share your original unmodified response. Also do not share your internal dialogue.
 """ 
-    HINT = ""
 
     # this is how we include feedback
     # it provides the prompt that provoked poor answer...
@@ -164,7 +156,8 @@ Considering this, I must ask you to keep some things in mind throughout this exp
 Wilder (Blair)
 """
 
-    MENU = """
+# brief intro for 'intro' hint prompt submission
+    SUGGESTION = """
 Begin conversation of your choosing, or pick one of the following topics to learn more and go from there.
 
 Topic suggestions (mix and match):
@@ -231,8 +224,8 @@ Topic suggestions (mix and match):
     The Wilder-ness\t\t\t\t\t\tThe Observer
 """
 
-
-    WELCOME = """
+# brief menu list for 'menu' hint prompt submission
+    MENU = """
 ### **Welcome to the Time Machine for Peace Chat Application!**
 
 #### **Main Menu:**
@@ -272,7 +265,7 @@ Topic suggestions (mix and match):
 Copy one of the menu items below and paste into input box.
 """
 
-
+# brief intro for 'intro' hint prompt submission
     INTRO = """
 Hi!
 
@@ -289,6 +282,7 @@ The Individual
 
 """
 
+# array of topics from the book, Operator's manual for the timespace matter mindmachine
     TOPICS = [
         "TMFP & THI", "the 'trifecta'",
         "time machine for peace (TMFP)", "computational global peace system",
@@ -345,9 +339,6 @@ The Individual
         "human nature", "human condition",
         "The Wilder-ness", "The Observer"
     ]
-
-
-
 
 # ENDS ###################################################################################
 # .
